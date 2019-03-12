@@ -6,6 +6,7 @@ import * as firebase from 'firebase';
 @Injectable({
   providedIn: 'root'
 })
+
 export class BooksService {
 
   books: Book[] = [];

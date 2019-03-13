@@ -12,7 +12,9 @@ export class BooksService {
   books: Book[] = [];
   booksSubject = new Subject<Book[]>();
   
-  constructor() { }
+  constructor() {
+    this.getBooks();
+  }
 
   emitBooks() {
     this.booksSubject.next(this.books);
@@ -25,9 +27,10 @@ export class BooksService {
   getBooks() {
     firebase.database().ref('/books')
       .on('value', (data) => {
-        this.books = data.val() ? data.val() : [];
-        this.emitBooks();
-      });
+          this.books = data.val() ? data.val() : [];
+          this.emitBooks();
+        }
+      );
   }
 
   getSingleBook(id: number) {
@@ -51,6 +54,17 @@ export class BooksService {
   }
 
   removeBook(book: Book) {
+    if(book.photo) {
+      const storageRef = firebase.storage().refFromURL(book.photo);
+      storageRef.delete().then(
+        () => {
+          console.log('Photo removed');
+        },
+        (error) => {
+          console.log('Couldn\'t remove photo' + error);
+        }
+      );
+    }
     const bookIndexToRemove = this.books.findIndex(
       (bookEl) => {
         if(bookEl === book) {
@@ -61,6 +75,29 @@ export class BooksService {
     this.books.splice(bookIndexToRemove, 1);
     this.saveBooks();
     this.emitBooks();
+  }
+
+  uploadFile(file: File) {
+    return new Promise(
+      (resolve, reject) => {
+        const almostUniqueFileName = Date.now().toString();
+        const upload = firebase.storage().ref()
+          .child('images/' + almostUniqueFileName + file.name)
+          .put(file);
+        upload.on(firebase.storage.TaskEvent.STATE_CHANGED,
+          () => {
+            console.log('Uploading...');
+          },
+          (error) => {
+            console.log('Error while loading' + error);
+          },
+          () => {
+            resolve(upload.snapshot.ref.getDownloadURL());
+            console.log('Done!');
+          }
+        );
+      }
+    );
   }
 
 }

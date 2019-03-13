@@ -1,7 +1,12 @@
 <div class="row">
-  <div class="col-xs-12">
-    <h1>{{ book.title }}</h1>
-    <h3>{{ book.author }}</h3>
-    <button class="btn btn-default" (click)="onBack()">Return</button>
+    <div class="col-xs-12">
+      <h1>{{ book.title }}</h1>
+      <h3>{{ book.author }}</h3>
+      <img style="max-width:400px;" *ngIf="book.photo" [src]="book.photo">
+      
+      <br>
+      <button class="btn btn-default" (click)="onBack()">Retour</button>
+
+      <!-- <script>console.log(this.book.title);</script> -->
+    </div>
   </div>
-</div>

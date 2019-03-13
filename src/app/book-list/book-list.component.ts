@@ -1,7 +1,7 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Book } from 'src/app/models/Book.model';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { BooksService } from '../services/books.service';
+import { Book } from '../models/book.model';
 import { Subscription } from 'rxjs';
-import { BooksService } from 'src/app/services/books.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -14,7 +14,7 @@ export class BookListComponent implements OnInit, OnDestroy {
   books: Book[];
   booksSubscription: Subscription;
 
-  constructor(private booksService: BooksService, private router: Router) { }
+  constructor(private booksService: BooksService, private router: Router) {}
 
   ngOnInit() {
     this.booksSubscription = this.booksService.booksSubject.subscribe(
@@ -37,9 +37,8 @@ export class BookListComponent implements OnInit, OnDestroy {
   onViewBook(id: number) {
     this.router.navigate(['/books', 'view', id]);
   }
-
+  
   ngOnDestroy() {
     this.booksSubscription.unsubscribe();
   }
-
 }

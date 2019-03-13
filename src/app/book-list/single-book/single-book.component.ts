@@ -1,8 +1,7 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Book } from 'src/app/models/Book.model';
-import { Subscription } from 'rxjs';
-import { BooksService } from 'src/app/services/books.service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Book } from '../../models/book.model';
+import { ActivatedRoute, Router } from '@angular/router';
+import { BooksService } from '../../services/books.service';
 
 @Component({
   selector: 'app-single-book',
@@ -13,9 +12,8 @@ export class SingleBookComponent implements OnInit {
 
   book: Book;
 
-  constructor(private booksService: BooksService, 
-              private router: Router,
-              private route: ActivatedRoute) { }
+  constructor(private route: ActivatedRoute, private booksService: BooksService,
+              private router: Router) {}
 
   ngOnInit() {
     this.book = new Book('', '');
@@ -30,5 +28,4 @@ export class SingleBookComponent implements OnInit {
   onBack() {
     this.router.navigate(['/books']);
   }
-
 }
